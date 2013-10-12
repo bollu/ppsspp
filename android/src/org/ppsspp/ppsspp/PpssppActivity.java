@@ -1,9 +1,6 @@
 package org.ppsspp.ppsspp;
 
-import android.os.Bundle;
-
 import com.henrikrydgard.libnative.NativeActivity;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class PpssppActivity extends NativeActivity {
 	static { 
@@ -33,5 +30,6 @@ public class PpssppActivity extends NativeActivity {
 
 	public boolean overrideKeys() {
 		return false;
-	}
-}                
+	}  
+}                                     
+   
