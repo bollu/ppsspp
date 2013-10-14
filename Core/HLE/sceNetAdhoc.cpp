@@ -40,6 +40,10 @@
 
 #include "net/resolve.h"
 
+//aemu dependencies
+#include "Core/Aemu/structures.h"
+#include "Core/Aemu/calls/init.h"
+
 enum {
 	ERROR_NET_ADHOC_INVALID_SOCKET_ID            = 0x80410701,
 	ERROR_NET_ADHOC_INVALID_ADDR                 = 0x80410702,
@@ -71,6 +75,7 @@ enum {
 };
 
 const size_t MAX_ADHOCCTL_HANDLERS = 32;
+const size_t ADHOCCTL_METAPORT = 27312;
 
 static bool netAdhocInited;
 static bool netAdhocctlInited;
@@ -90,6 +95,27 @@ struct AdhocctlHandler {
 };
 
 static std::map<int, AdhocctlHandler> adhocctlHandlers;
+
+//aemu copy paste----------------------------------------------------
+// Adhoc-Control Metaport
+//#define ADHOCCTL_METAPORT 27312
+
+// Adhoc Nickname
+#define ADHOCCTL_NICKNAME_LEN 128
+typedef struct SceNetAdhocctlNickname {
+	uint8_t data[ADHOCCTL_NICKNAME_LEN];
+} __attribute__((packed)) SceNetAdhocctlNickname;
+
+// Peer Information
+typedef struct SceNetAdhocctlPeerInfo {
+	struct SceNetAdhocctlPeerInfo * next;
+	SceNetAdhocctlNickname nickname;
+	SceNetEtherAddr mac_addr;
+	uint32_t ip_addr;
+	uint8_t padding[2];
+	uint64_t last_recv;
+} __attribute__((packed)) SceNetAdhocctlPeerInfo;
+//aemu copypaste end----------------------------------------------
 
 void __NetAdhocInit() {
 	netAdhocInited = false;
@@ -129,7 +155,9 @@ u32 sceNetAdhocInit() {
 	ERROR_LOG(SCENET, "UNIMPL sceNetAdhocInit()");
 	if (netAdhocInited)
 		return ERROR_NET_ADHOC_ALREADY_INITIALIZED;
-	netAdhocInited = true;
+
+	netAdhocInited = (proNetAdhocInit() == 0); //prefer this over !proNetAdhocInit(). feel free to change
+	
 
 	return 0;
 }

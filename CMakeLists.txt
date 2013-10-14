@@ -752,6 +752,7 @@ add_library(${CoreLibName} ${CoreLinkType}
 	Core/HDRemaster.cpp
 	Core/HDRemaster.h
 	Core/ThreadEventQueue.h
+	Core/Aemu/common.h #<- auto includes everything else that aemu has
 	Core/Debugger/Breakpoints.cpp
 	Core/Debugger/Breakpoints.h
 	Core/Debugger/DebugInterface.h

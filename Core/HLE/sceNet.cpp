@@ -25,6 +25,10 @@
 #include "sceUtility.h"
 
 #include "net/resolve.h"
+#include <sys/socket.h>
+
+//aemu dependencies
+#include "Core/Aemu/structures.h"
 
 static bool netInited;
 static bool netInetInited;
@@ -46,6 +50,55 @@ enum {
 	ERROR_NET_ADHOCCTL_TOO_MANY_HANDLERS         = 0x80410b12,
 };
 
+/*
+//aemu copypaste begin----------------------------------
+//NET MODULE
+// Error Codes
+#define NET_NO_SPACE 0x80410001
+#define NET_INTERNAL 0x80410002
+#define CORE_INVALID_ARG 0x80410103
+
+//end of aemu-copypaste----------------------------------------------
+
+
+//aemu copypaster begin---------------------------------------------------
+//INET MODULE
+
+// IP Macros
+#define INADDR_ANY 0
+
+// On-Demand Nonblocking Flag
+#define INET_MSG_DONTWAIT 0x80
+
+// Event Flags
+#define INET_POLLRDNORM 0x0040
+#define INET_POLLWRNORM 0x0004
+
+// Sockaddr
+typedef struct SceNetInetSockaddr {
+	uint8_t sa_len;
+	uint8_t sa_family;
+	uint8_t sa_data[14];
+} SceNetInetSockaddr;
+
+// Sockaddr_in
+typedef struct SceNetInetSockaddrIn {
+	uint8_t sin_len;
+	uint8_t sin_family;
+	uint16_t sin_port;
+	uint32_t sin_addr;
+	uint8_t sin_zero[8];
+} SceNetInetSockaddrIn;
+
+// Polling Event Field
+typedef struct SceNetInetPollfd {
+	int fd;
+	short events;
+	short revents;
+} SceNetInetPollfd;
+
+//aemu copypaste end----------------------------------------------------
+*/
 struct ProductStruct {
 	s32_le unknown; // Unknown, set to 0
 	char product[9]; // Game ID (Example: ULUS10000)
@@ -140,12 +193,12 @@ u32 sceWlanGetEtherAddr(u32 addrAddr) {
 
 u32 sceWlanDevIsPowerOn() {
 	DEBUG_LOG(SCENET, "UNTESTED 0=sceWlanDevIsPowerOn()");
-	return 0;
+	return 1;
 }
 
 u32 sceWlanGetSwitchState() {
 	DEBUG_LOG(SCENET, "UNTESTED sceWlanGetSwitchState()");
-	return 0;
+	return 1;
 }
 
 // Probably a void function, but often returns a useful value.
@@ -215,6 +268,9 @@ int sceNetEtherStrton(u32 bufferPtr, u32 macPtr) {
 	}
 }
 
+int sceNetGetLocalEtherAddr(SceNetEtherAddr * addr){
+
+}
 
 // Write static data since we don't actually manage any memory for sceNet* yet.
 int sceNetGetMallocStat(u32 statPtr) {
