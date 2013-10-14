@@ -41,7 +41,6 @@
 #include "Core/HLE/sceCtrl.h"
 #include "Core/HLE/sceDisplay.h"
 #include "Core/Debugger/SymbolMap.h"
-#include "Core/SaveState.h"
 
 #include "UI/OnScreenDisplay.h"
 #include "UI/ui_atlas.h"
@@ -127,8 +126,6 @@ void EmuScreen::bootGame(const std::string &filename) {
 
 EmuScreen::~EmuScreen() {
 	if (!invalid_) {
-		//save if auto-save on quit is enabled.
-		saveOnQuit();
 		// If we were invalid, it would already be shutdown.
 		PSP_Shutdown();
 	}
@@ -580,9 +577,3 @@ void EmuScreen::deviceLost() {
 	if (gpu)
 		gpu->DeviceLost();
 }
-
-void EmuScreen::saveOnQuit(){
-	if(g_Config.bSaveOnQuit){
-		SaveState::SaveSlot(g_Config.iCurrentStateSlot, 0, 0);
-	}
-};

@@ -66,6 +66,4 @@ private:
 
 	// To track mappable virtual keys. We can have as many as we want.
 	bool virtKeys[VIRTKEY_COUNT];
-
-	void saveOnQuit();
 };
